@@ -33,45 +33,12 @@ jobs:
           cd builder
           bin/ct-ng build
 
-      - name: Yay it worked! Now, where is my toolchain located?
-        run: |
-          ls -la builder
-          ls -la .
-          ls -la ..
+      - name: tar toolchain
+        run: tar cJf arm-rpi-linux-gnueabihf.tar.xz $HOME/x-tools/arm-rpi-linux-gnueabihf
 
-  #     - name: Upload build output
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: build-output-android30
-  #         path: libck-android30.a
-
-  # create-release:
-  #   runs-on: ubuntu-20.04
-  #   needs: [build-macos, build-android, build-macos-arm64]
-  #   steps:
-  #     - name: Get build output macos11
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: build-output-macos11
-
-  #     - name: Get build output android30
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: build-output-android30
-
-  #     - name: Get build output macos-arm64
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: build-output-macos-arm64
-
-  #     - name: Create release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         files: |
-  #           include.zip
-  #           libck-macos11.a
-  #           libck-android30.a
-  #           libck-macos-arm64.a
-  #           LICENSE
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: arm-rpi-linux-gnueabihf.tar.xz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
