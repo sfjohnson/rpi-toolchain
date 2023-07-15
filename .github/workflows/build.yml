@@ -33,6 +33,10 @@ jobs:
           cd builder
           bin/ct-ng build
 
+      # https://superuser.com/a/91966
+      - name: Change directories from 555 to 755
+        run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-gnueabihf/
+
       - name: tar toolchain
         run: tar cJf arm-rpi-linux-gnueabihf.tar.xz -C $HOME/x-tools arm-rpi-linux-gnueabihf
 
