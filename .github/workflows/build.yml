@@ -34,7 +34,7 @@ jobs:
           bin/ct-ng build
 
       - name: tar toolchain
-        run: tar cJf arm-rpi-linux-gnueabihf.tar.xz $HOME/x-tools/arm-rpi-linux-gnueabihf
+        run: tar cJf arm-rpi-linux-gnueabihf.tar.xz -C $HOME/x-tools arm-rpi-linux-gnueabihf
 
       - name: Create release
         uses: softprops/action-gh-release@v1
