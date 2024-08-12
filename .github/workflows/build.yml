@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -27,9 +27,9 @@ jobs:
           make
           make install
 
-      - name: Build toolchain
+      - name: Build toolchain 32-bit
         run: |
-          cp sams-config/ct-ng-menuconfig.conf builder/.config
+          cp sams-config/ct-ng-menuconfig32.conf builder/.config
           cd builder
           bin/ct-ng build
 
@@ -40,9 +40,22 @@ jobs:
       - name: tar toolchain
         run: tar cJf arm-rpi-linux-gnueabihf.tar.xz -C $HOME/x-tools arm-rpi-linux-gnueabihf
 
+      - name: Build toolchain 64-bit
+        run: |
+          bin/ct-ng distclean
+          cp ../sams-config/ct-ng-menuconfig64.conf .config
+          bin/ct-ng build
+
+      - name: Change directories from 555 to 755
+        run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-aarc64/
+
+      - name: tar toolchain
+        run: tar cJf arm-rpi-linux-aarc64.tar.xz -C $HOME/x-tools arm-rpi-linux-aarc64
+
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: arm-rpi-linux-gnueabihf.tar.xz
+          files: arm-rpi-linux-aarc64.tar.xz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
