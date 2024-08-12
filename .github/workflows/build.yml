@@ -55,7 +55,8 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          files: arm-rpi-linux-gnueabihf.tar.xz
-          files: arm-rpi-linux-aarc64.tar.xz
+          files: |
+            arm-rpi-linux-gnueabihf.tar.xz
+            arm-rpi-linux-aarc64.tar.xz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
