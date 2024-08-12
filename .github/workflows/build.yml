@@ -41,14 +41,9 @@ jobs:
 
       - name: Build toolchain 64-bit
         run: |
-          bin/ct-ng distclean
-          cd ..
-          ./bootstrap
-          ./configure --prefix=$(pwd)/builder
-          make
-          make install
-          cp ../sams-config/ct-ng-menuconfig64.conf .config
           cd builder
+          bin/ct-ng distclean
+          cp ../sams-config/ct-ng-menuconfig64.conf .config
           bin/ct-ng build
 
       - name: Change directories from 555 to 755
