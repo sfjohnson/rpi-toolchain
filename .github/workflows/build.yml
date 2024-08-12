@@ -31,32 +31,37 @@ jobs:
         run: |
           cp sams-config/ct-ng-menuconfig32.conf builder/.config
           cd builder
-          bin/ct-ng build
 
       # https://superuser.com/a/91966
-      - name: Change directories from 555 to 755
-        run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-gnueabihf/
+#       - name: Change directories from 555 to 755
+#         run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-gnueabihf/
 
-      - name: tar toolchain
-        run: tar cJf arm-rpi-linux-gnueabihf.tar.xz -C $HOME/x-tools arm-rpi-linux-gnueabihf
+#       - name: tar toolchain
+#         run: tar cJf arm-rpi-linux-gnueabihf.tar.xz -C $HOME/x-tools arm-rpi-linux-gnueabihf
 
       - name: Build toolchain 64-bit
         run: |
           bin/ct-ng distclean
+          cd ..
+          ./bootstrap
+          ./configure --prefix=$(pwd)/builder
+          make
+          make install
           cp ../sams-config/ct-ng-menuconfig64.conf .config
+          cd builder
           bin/ct-ng build
 
       - name: Change directories from 555 to 755
-        run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-aarc64/
+        run: sudo chmod -R u+rwX,go+rX,go-w $HOME/x-tools/arm-rpi-linux-aarch64/
 
       - name: tar toolchain
-        run: tar cJf arm-rpi-linux-aarc64.tar.xz -C $HOME/x-tools arm-rpi-linux-aarc64
+        run: tar cJf arm-rpi-linux-aarch64.tar.xz -C $HOME/x-tools arm-rpi-linux-aarch64
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             arm-rpi-linux-gnueabihf.tar.xz
-            arm-rpi-linux-aarc64.tar.xz
+            arm-rpi-linux-aarch64.tar.xz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
